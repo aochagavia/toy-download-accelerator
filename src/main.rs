@@ -171,7 +171,8 @@ async fn get_in_parallel(
         // the original `buffer`, which will now have its start right after the end of the chunk.
         let mut buffer_slice_for_chunk = buffer.split_to(this_chunk_size);
 
-        // Each download task needs its own copy of the semaphore, the http client and the url
+        // Each download task needs its own copy of the semaphore, the http client and the url.
+        // Without this, you'd get ownership and lifetime errors, which can be puzzling at times
         let chunk_semaphore = semaphore.clone();
         let chunk_http_client = http_client.clone();
         let url = url.to_string();
@@ -223,7 +224,7 @@ async fn get_in_parallel(
             // is also a result! Hence the second question mark operator
             .context("chunk download failed")?;
 
-        // This repeatedly appends a split-off slice back into the original buffer
+        // This puts the split-off slice back into the original buffer
         buffer.unsplit(buffer_slice);
     }
 
