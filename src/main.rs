@@ -26,15 +26,17 @@ fn main() -> anyhow::Result<()> {
     // Get the command-line arguments (the first one is the executable's name, so we skip it)
     let mut args = std::env::args().skip(1);
 
-    // First we expect the url, which is mandatory
+    // First we expect the url
     let Some(url) = args.next() else {
         bail!("url should be provided as the first argument to the program, but no argument was provided")
     };
 
-    // Then we accept a chunk size, or default to 5 MiB
-    let chunk_size_mb: usize = args
-        .next()
-        .unwrap_or("5".to_string())
+    // Second is the chunk size
+    let Some(chunk_size_str) = args.next() else {
+        bail!("chunk size should be provided as the second argument to the program, but no argument was provided")
+    };
+
+    let chunk_size_mb: usize = chunk_size_str
         .parse()
         .context("chunk size could not be parsed as an unsigned integer")?;
 
