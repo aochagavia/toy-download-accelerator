@@ -1,0 +1,11 @@
+[package]
+name = "download-accelerator"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.82"
+bytes = "1.6.0"
+reqwest = "0.12.4"
+sha2 = "0.10.8"
+tokio = { version = "1.37.0", features = ["rt-multi-thread"] }
